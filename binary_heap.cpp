@@ -38,7 +38,48 @@ class MinHeap {
 
     // todo: implement pop function
     int pop() {
+        if (heapSize == 0) {
+            throw runtime_error("Cannot pop, heap is empty!");
+        }
 
+        // store minimum value (root) to return it later
+        int root = heap[0];
+
+        // move the very last element to the root and shrink the heap size
+        heap[0] = heap[--heapSize];
+
+        // heapify down
+        int idx = 0;
+        while (idx < heapSize) {
+            int leftIdx = 2 * idx + 1; // get index of left child
+            int rightIdx = 2 * idx + 2; // get index of left child
+            
+            // case a: only has a left child
+            if (leftIdx < heapSize && rightIdx >= heapSize){
+                if (heap[leftIdx] < heap[idx]){
+                    swap(heap[leftIdx], heap[idx]); // swap if left child is smaller
+                    idx = leftIdx;
+                } else {
+                    break; // node is already smaller than child, stop sinking
+                }
+            } else if (rightIdx < heapSize) { // case b: has both children
+                //find out which childe is the absoulte smallest
+                int swapIdx = leftIdx;
+                if (heap[rightIdx] < heap[swapIdx]){
+                    swapIdx = rightIdx;
+                }
+                // swap if that smallest child is less than the current element
+                if (heap[swapIdx] < heap[idx]) {
+                    swap(heap[swapIdx], heap[idx]);
+                    idx = swapIdx;
+                } else {
+                    break; // ode is smaller than both children, stop sinking
+                }
+            } else { //case c: has no children
+                break;
+            }     
+        }
+        return root;
     }
 };
 
